@@ -1,4 +1,19 @@
 'use strict';
+import image1 from './images/dice-1.png';
+import image2 from './images/dice-2.png';
+import image3 from './images/dice-3.png';
+import image4 from './images/dice-4.png';
+import image5 from './images/dice-5.png';
+import image6 from './images/dice-6.png';
+
+const images = [
+  { img: image1 },
+  { img: image2 },
+  { img: image3 },
+  { img: image4 },
+  { img: image5 },
+  { img: image6 },
+];
 
 // Selecting elements
 const player0El = document.querySelector('.player--0');
@@ -8,7 +23,7 @@ const score1El = document.getElementById('score--1');
 const current0El = document.getElementById('current--0');
 const current1El = document.getElementById('current--1');
 
-const diceEl = document.querySelector('.dice');
+let diceEl = document.querySelector('.dice');
 const btnNew = document.querySelector('.btn--new');
 const btnRoll = document.querySelector('.btn--roll');
 const btnHold = document.querySelector('.btn--hold');
@@ -41,6 +56,7 @@ const switchPlayer = function () {
   activePlayer = activePlayer === 0 ? 1 : 0;
   player0El.classList.toggle('player--active');
   player1El.classList.toggle('player--active');
+  diceEl.classList.add('hidden');
 };
 
 // Rolling dice functionality
@@ -49,17 +65,23 @@ btnRoll.addEventListener('click', function () {
     // 1. Generating a random dice roll
     const dice = Math.trunc(Math.random() * 6) + 1;
 
-    // 2. Display dice
     diceEl.classList.remove('hidden');
-    diceEl.src = `dice-${dice}.png`;
+    diceEl.alt = `Playing dice ${dice}`;
+
+    // 2. Display dice
+    const imageMap = images.filter((item, i) => {
+      return dice === i + 1;
+    });
+
+    const diceNumber = Object.values(imageMap[0]);
+    diceEl.src = diceNumber;
 
     // 3. Check for rolled 1
     if (dice !== 1) {
       // Add dice to current score
       currentScore += dice;
-      document.getElementById(
-        `current--${activePlayer}`
-      ).textContent = currentScore;
+      document.getElementById(`current--${activePlayer}`).textContent =
+        currentScore;
     } else {
       // Switch to next player
       switchPlayer();
